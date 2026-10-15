@@ -97,7 +97,7 @@ tweets2 |>
         labs(title = "Uses of #ActOnClimate Overtime", x = "Year", y = "Number of Uses")
 ```
 
-This graph plots the usage of #ActOnClimate overtime in both Obama's own tweets and his retweets.
+This graph plots the usage of #ActOnClimate overtime in both Obama's own tweets and his retweets. The hashtag was introduced in the middle of 2013, peaking in usage towards the middle of 2014. It was used constantly in 2015 and dropped in usage towards the end of his second term.
 
 
 #### Most Mentioned 
