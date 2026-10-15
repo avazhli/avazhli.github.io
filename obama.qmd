@@ -62,35 +62,121 @@ The mean length of the Tweets is 128 characters. This table displays the length 
 ```{r}
 tweets1 |> 
     ggplot(aes(x=timestamp, y=length)) + 
-    geom_point(alpha = 0.15,size=0.8, color = "steelblue") +
+    geom_point(alpha = 0.15,size=0.8, color = "#1DA1F2") +
     labs(title = "Length of Obama's Tweets Over Time", 
             x = "Date Posted", y = "Tweet Length (characters)") +
-    theme_void()
+    theme_minimal()
 ```
 
 #### Most common Hashtags
-look around 
-fct_reorder
-plot 
+```{r}
+tweets2 |> 
+    filter(is.na(retweeted_status_id), !str_detect(text, "^RT @")) |> 
+    mutate(hashtag = str_extract_all(text_lower, "#\\w+")) |> 
+    unnest(hashtag) |> 
+    filter(!is.na(hashtag)) |> 
+    group_by(hashtag) |> 
+    summarize(n=n()) |> 
+    arrange(desc(n)) |> 
+    slice_head(n=10) |> 
+    ggplot(aes(x=n, y = fct_reorder(hashtag,n))) +
+        geom_col(fill = "#1DA1F2") +
+        labs(title = "Top 10 Most Used Hashtags", x = NULL, y = "Hashtag")
+```
+
+This chart shows the 10 most highly used hashtags by former President Obama in his own Tweets. From this data, we can see that some of the issues he cared about includes climate action, healthcare, and equal opportunity. 
+
+```{r}
+tweets2 |> 
+    filter(str_detect(text_lower,"#actonclimate\\b")) |> 
+    mutate(month = floor_date(timestamp, "month")) |> 
+    group_by(month) |> 
+    summarize(n=n()) |> 
+    ggplot(aes(x=month, y = n)) +
+        geom_line(color = "#1DA1F2") +
+        labs(title = "Uses of #ActOnClimate Overtime", x = "Year", y = "Number of Uses")
+```
+
+This graph plots the usage of #ActOnClimate overtime in both Obama's own tweets and his retweets.
+
 
 #### Most Mentioned 
 str_extract
 
 #### Topics 
-str_extract
+str_detect("health")
+str_detect("econom")
+str_detect("health")
     fct_lump
+
+
 
 
 #### tweets per month/ per year
 ```{r}
 tweets2 |> 
-    mutate(month = month(timestamp)) |> 
+    mutate(month = month(timestamp, label =TRUE)) |> 
     group_by(month) |> 
     summarize(n=n()) |> 
     ggplot(aes(x=month,y=n)) +
-        geom_col() + 
+        geom_col(fill = "#1DA1F2") + 
         labs(title = "Obama's Tweets by Month", x = "Month", y = "Number of Tweets") 
 ```
 
-mutate(year = year(timestamp))
-geom_line 
+This chart shows Obama's Tweets per month over the span of his time running the POTUS account. He has tweeted the most in January 
+```{r}
+tweets2 |> 
+    mutate(year = year(timestamp)) |> 
+    group_by(year) |> 
+    summarize(n=n()) |> 
+    ggplot(aes(x=year,y=n)) +
+        geom_line(color = "#1DA1F2" ) + 
+        scale_x_continuous(breaks = 2009:2016) +
+        labs(title = "Obama's Tweets Over the Years", x = "Year", y = "Number of Tweets") 
+```
+
+```{r}
+tweets2 |>
+    mutate(date = as_date(timestamp)) |> 
+    group_by(date) |> 
+    summarize(n=n()) |> 
+    ggplot(aes(x=date,y=n)) +
+        geom_col() + 
+        labs(title = "Obama's Tweets by Date", x = "Date", y = "Number of Tweets") 
+```
+
+This graph shows Obama's Tweets over his years in office. It shows that he used his Twitter more in his second term from 2013-2017, and used it the most in 2014 and 2015. This surge in usage in 2014 could be due to his decleration of the year as a "year of action," in which he enacted many executive orders and policy initiatives to address many issues of the time.
+
+```{r}
+tweets2 |> 
+  mutate(date = as_date(timestamp)) |> 
+  count(date) |> 
+  ggplot(aes(x = date, y = n)) +
+  geom_line() +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  labs(title = "Obama's Tweets per Day",
+       x = "Date",
+       y = "Number of tweets")
+```
+```{r}
+tweets2 |>
+  mutate(month = floor_date(as_date(timestamp), "month")) |> 
+  count(month) |> 
+  ggplot(aes(x = month, y = n)) +
+  geom_col(fill = "steelblue") + 
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  labs(title = "Obama's Tweets by Month", 
+       x = "Year", 
+       y = "Number of Tweets") +
+  theme_minimal()
+tweets2 |>
+  mutate(date = as_date(timestamp)) |> 
+  count(date) |> 
+  ggplot(aes(x = date, y = n)) +
+  geom_col(fill = "steelblue", width = 1) + 
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y") +
+  labs(title = "Obama's Tweets by Date", 
+       x = "Year", 
+       y = "Number of Tweets") +
+  theme_minimal()
+```
