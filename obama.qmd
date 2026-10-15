@@ -45,19 +45,28 @@ a description of what insights can be gained from your plots and tables
 ## Text Analysis
 
 #### Tweet Length
-
 ```{r}
-tweets2 |> 
+tweets1 <- tweets2 |> 
     filter(!is.na(text)) |> 
     mutate(length = str_length(text_lower)) |> 
     mutate(mean = mean(length)) |> 
     mutate(length_ratio = length/mean) |> 
     select(length_ratio, length, tweet_id, timestamp, text, source) |> 
-    arrange(desc(length)) 
+    arrange(desc(length))
+tweets1 |> 
+    summarize(mean = mean(length), max = max(length), min = min(length))
 ```
 
+The mean length of the Tweets is 128 characters. This table displays the length of each post in descending order. Further, it takes the relative length of each post to the mean. The longest post had 171 characters, and the shortest Tweet contained only 17 characters. 
 
-The mean length of the Tweets is 128 characters. This table displays the length of each post in descending order. Further, it takes the relative length of each post to the mean
+```{r}
+tweets1 |> 
+    ggplot(aes(x=timestamp, y=length)) + 
+    geom_point(alpha = 0.15,size=0.8, color = "steelblue") +
+    labs(title = "Length of Obama's Tweets Over Time", 
+            x = "Date Posted", y = "Tweet Length (characters)") +
+    theme_void()
+```
 
 #### Most common Hashtags
 look around 
@@ -73,6 +82,18 @@ str_extract
 
 
 #### tweets per month/ per year
-plot 
+```{r}
+tweets2 |> 
+    mutate(month = month(timestamp)) |> 
+    group_by(month) |> 
+    summarize(n=n())
+```
+
+
+```{r}
+ggplot(__, aes(x = month)) +
+    geom_bar() + 
+    labs(title = "Obama's Tweets by Month", x = "", y = "") 
+```
 
 mutate(year = year(timestamp))
