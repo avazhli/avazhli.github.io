@@ -284,10 +284,10 @@ $ expanded_urls              &lt;chr&gt; "http://snpy.tv/2f3WnrO", "http://snpy.
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tweets1 <span class="sc">|&gt;</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>timestamp, <span class="at">y=</span>length)) <span class="sc">+</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.15</span>,<span class="at">size=</span><span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.15</span>,<span class="at">size=</span><span class="fl">0.8</span>, <span class="at">color =</span> <span class="st">"#1DA1F2"</span>) <span class="sc">+</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Length of Obama's Tweets Over Time"</span>, </span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="st">"Date Posted"</span>, <span class="at">y =</span> <span class="st">"Tweet Length (characters)"</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -300,28 +300,21 @@ $ expanded_urls              &lt;chr&gt; "http://snpy.tv/2f3WnrO", "http://snpy.
 </section>
 <section id="most-common-hashtags" class="level4">
 <h4 class="anchored" data-anchor-id="most-common-hashtags">Most common Hashtags</h4>
-<p>look around fct_reorder plot</p>
-</section>
-<section id="most-mentioned" class="level4">
-<h4 class="anchored" data-anchor-id="most-mentioned">Most Mentioned</h4>
-<p>str_extract</p>
-</section>
-<section id="topics" class="level4">
-<h4 class="anchored" data-anchor-id="topics">Topics</h4>
-<p>str_extract fct_lump</p>
-</section>
-<section id="tweets-per-month-per-year" class="level4">
-<h4 class="anchored" data-anchor-id="tweets-per-month-per-year">tweets per month/ per year</h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">month</span>(timestamp)) <span class="sc">|&gt;</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>month,<span class="at">y=</span>n)) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Obama's Tweets by Month"</span>, <span class="at">x =</span> <span class="st">"Month"</span>, <span class="at">y =</span> <span class="st">"Number of Tweets"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">is.na</span>(retweeted_status_id), <span class="sc">!</span><span class="fu">str_detect</span>(text, <span class="st">"^RT @"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">hashtag =</span> <span class="fu">str_extract_all</span>(text_lower, <span class="st">"#</span><span class="sc">\\</span><span class="st">w+"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(hashtag) <span class="sc">|&gt;</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(hashtag)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(hashtag) <span class="sc">|&gt;</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_head</span>(<span class="at">n=</span><span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>n, <span class="at">y =</span> <span class="fu">fct_reorder</span>(hashtag,n))) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1DA1F2"</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Most Used Hashtags"</span>, <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Hashtag"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -331,7 +324,162 @@ $ expanded_urls              &lt;chr&gt; "http://snpy.tv/2f3WnrO", "http://snpy.
 </div>
 </div>
 </div>
-<p>mutate(year = year(timestamp)) geom_line</p>
+<p>This chart shows the 10 most highly used hashtags by former President Obama in his own Tweets. From this data, we can see that some of the issues he cared about includes climate action, healthcare, and equal opportunity.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">str_detect</span>(text_lower,<span class="st">"#actonclimate</span><span class="sc">\\</span><span class="st">b"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(timestamp, <span class="st">"month"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>month, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#1DA1F2"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Uses of #ActOnClimate Overtime"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Number of Uses"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="obama_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This graph plots the usage of #ActOnClimate overtime in both Obama’s own tweets and his retweets. The hashtag was introduced in the middle of 2013, peaking in usage towards the middle of 2014. It was used constantly in 2015 and dropped in usage towards the end of his second term.</p>
+</section>
+<section id="most-mentioned" class="level4">
+<h4 class="anchored" data-anchor-id="most-mentioned">Most Mentioned</h4>
+<p>str_extract</p>
+</section>
+<section id="topics" class="level4">
+<h4 class="anchored" data-anchor-id="topics">Topics</h4>
+<p>str_detect(“health”) str_detect(“econom”) str_detect(“health”) fct_lump</p>
+</section>
+<section id="tweets-per-month-per-year" class="level4">
+<h4 class="anchored" data-anchor-id="tweets-per-month-per-year">tweets per month/ per year</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">month</span>(timestamp, <span class="at">label =</span><span class="cn">TRUE</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>month,<span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#1DA1F2"</span>) <span class="sc">+</span> </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Obama's Tweets by Month"</span>, <span class="at">x =</span> <span class="st">"Month"</span>, <span class="at">y =</span> <span class="st">"Number of Tweets"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="obama_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This chart shows Obama’s Tweets per month over the span of his time running the POTUS account. He has tweeted the most in January</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(timestamp)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year) <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>year,<span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"#1DA1F2"</span> ) <span class="sc">+</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">2009</span><span class="sc">:</span><span class="dv">2016</span>) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Obama's Tweets Over the Years"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Number of Tweets"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="obama_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as_date</span>(timestamp)) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(date) <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date,<span class="at">y=</span>n)) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Obama's Tweets by Date"</span>, <span class="at">x =</span> <span class="st">"Date"</span>, <span class="at">y =</span> <span class="st">"Number of Tweets"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="obama_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This graph shows Obama’s Tweets over his years in office. It shows that he used his Twitter more in his second term from 2013-2017, and used it the most in 2014 and 2015. This surge in usage in 2014 could be due to his decleration of the year as a “year of action,” in which he enacted many executive orders and policy initiatives to address many issues of the time.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as_date</span>(timestamp)) <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(date) <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"1 year"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Obama's Tweets per Day"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of tweets"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="obama_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(<span class="fu">as_date</span>(timestamp), <span class="st">"month"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"1 year"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Obama's Tweets by Month"</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>, </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Tweets"</span>) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="obama_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>tweets2 <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as_date</span>(timestamp)) <span class="sc">|&gt;</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(date) <span class="sc">|&gt;</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> n)) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">width =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"1 year"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>) <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Obama's Tweets by Date"</span>, </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>, </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Tweets"</span>) <span class="sc">+</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="obama_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>
