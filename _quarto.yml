@@ -14,6 +14,8 @@ website:
             href: nsf.qmd
           - text: "U.S. Gas Prices"
             href: gas.qmd
+          - text: "Obama Tweets"
+            href: obama.qmd
 
 
 format:

@@ -1,0 +1,25 @@
+---
+title: "Barack Obama's Tweets""
+description: A text analysis of Obama's Twitter acount
+author: Ava Li
+date: October 14,2026
+format: html
+code-fold: true
+---
+```{r,message=FALSE,warning=FALSE}
+#| echo: false
+library(tidyverse)
+
+tweets <- read_csv("data/tweets.csv")
+
+```
+
+## The Data
+This data was taken from the Barack Obama Presidential Library created by the National Archives. The data set contains information about every Tweet made by Obama through the @POTUS44 handle. 
+
+You can access the data for yourself here: [National Archives - Obama Tweets]
+(https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media)
+
+```{r}
+glimpse(tweets)
+```

@@ -18,7 +18,7 @@ weekly_gas <- weekly_gas_prices
 
 ## The Data
 Retrieved from TidyTuesday:   
-https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-07-01
+[https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-07-01](https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-07-01)
 
 The data is originally from the U.S. Energy Information Administration (EIA), which publishes average retail gasoline and diesel prices weekly.
 

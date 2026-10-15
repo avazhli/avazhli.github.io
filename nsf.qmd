@@ -19,7 +19,7 @@ nsf <- nsf_terminations
 
 ## The Data
 Retrieved from TidyTuesday:   
-https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-05-06/readme.md
+[https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-05-06/readme.md](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-05-06/readme.md)
 
 The dataset includes information on grants for scientific research and education projects from the U.S. National Science Foundation (NSF) that have been terminated by the Trump administration in 2025. The data was collected by Grant Watch through crowdsourcing from researchers and program administrators, as the administration has not released information on these terminations. 
 
