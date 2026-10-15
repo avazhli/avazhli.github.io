@@ -86,14 +86,11 @@ str_extract
 tweets2 |> 
     mutate(month = month(timestamp)) |> 
     group_by(month) |> 
-    summarize(n=n())
-```
-
-
-```{r}
-ggplot(__, aes(x = month)) +
-    geom_bar() + 
-    labs(title = "Obama's Tweets by Month", x = "", y = "") 
+    summarize(n=n()) |> 
+    ggplot(aes(x=month,y=n)) +
+        geom_col() + 
+        labs(title = "Obama's Tweets by Month", x = "Month", y = "Number of Tweets") 
 ```
 
 mutate(year = year(timestamp))
+geom_line 
