@@ -54,5 +54,19 @@
     "title": "Ava Li",
     "section": "",
     "text": "Scripps College | Claremont, CA | Aug. 2025 - May 2029\nB.A. in Public Policy and Economics; Minor in Data Science Here are some of my projects:\nView my Github Repo:"
+  },
+  {
+    "objectID": "obama.html",
+    "href": "obama.html",
+    "title": "Barack Obama’s Tweets",
+    "section": "",
+    "text": "This data was taken from the Barack Obama Presidential Library created by the National Archives. The data set contains information about every Tweet made by Obama through the @POTUS44 handle.\nYou can access the data for yourself here: National Archives - Obama Tweets\n\n\nCode\nglimpse(tweets)\n\n\nRows: 27,346\nColumns: 10\n$ tweet_id                   &lt;dbl&gt; 7.989148e+17, 7.989097e+17, 7.989085e+17, 7…\n$ in_reply_to_status_id      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ in_reply_to_user_id        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ timestamp                  &lt;chr&gt; \"2016-11-16 15:45:01 +0000\", \"2016-11-16 15…\n$ source                     &lt;chr&gt; \"&lt;a href=\\\"https://about.twitter.com/produc…\n$ text                       &lt;chr&gt; \"\\\"Nothing can break the spirit of the Gree…\n$ retweeted_status_id        &lt;dbl&gt; NA, NA, NA, 7.989025e+17, NA, NA, NA, NA, N…\n$ retweeted_status_user_id   &lt;dbl&gt; NA, NA, NA, 2458567464, NA, NA, NA, NA, NA,…\n$ retweeted_status_timestamp &lt;chr&gt; NA, NA, NA, \"2016-11-16 14:56:12 +0000\", NA…\n$ expanded_urls              &lt;chr&gt; \"http://snpy.tv/2f3WnrO\", \"http://snpy.tv/2…"
+  },
+  {
+    "objectID": "obama.html#the-data",
+    "href": "obama.html#the-data",
+    "title": "Barack Obama’s Tweets",
+    "section": "",
+    "text": "This data was taken from the Barack Obama Presidential Library created by the National Archives. The data set contains information about every Tweet made by Obama through the @POTUS44 handle.\nYou can access the data for yourself here: National Archives - Obama Tweets\n\n\nCode\nglimpse(tweets)\n\n\nRows: 27,346\nColumns: 10\n$ tweet_id                   &lt;dbl&gt; 7.989148e+17, 7.989097e+17, 7.989085e+17, 7…\n$ in_reply_to_status_id      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ in_reply_to_user_id        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…\n$ timestamp                  &lt;chr&gt; \"2016-11-16 15:45:01 +0000\", \"2016-11-16 15…\n$ source                     &lt;chr&gt; \"&lt;a href=\\\"https://about.twitter.com/produc…\n$ text                       &lt;chr&gt; \"\\\"Nothing can break the spirit of the Gree…\n$ retweeted_status_id        &lt;dbl&gt; NA, NA, NA, 7.989025e+17, NA, NA, NA, NA, N…\n$ retweeted_status_user_id   &lt;dbl&gt; NA, NA, NA, 2458567464, NA, NA, NA, NA, NA,…\n$ retweeted_status_timestamp &lt;chr&gt; NA, NA, NA, \"2016-11-16 14:56:12 +0000\", NA…\n$ expanded_urls              &lt;chr&gt; \"http://snpy.tv/2f3WnrO\", \"http://snpy.tv/2…"
   }
 ]

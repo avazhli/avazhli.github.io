@@ -1,6 +1,6 @@
 ---
-title: "Barack Obama's Tweets""
-description: A text analysis of Obama's Twitter acount
+title: "Barack Obama's Tweets"
+description: A text analysis of former president Barack Obama's Twitter account
 author: Ava Li
 date: October 14,2026
 format: html
@@ -17,9 +17,62 @@ tweets <- read_csv("data/tweets.csv")
 ## The Data
 This data was taken from the Barack Obama Presidential Library created by the National Archives. The data set contains information about every Tweet made by Obama through the @POTUS44 handle. 
 
-You can access the data for yourself here: [National Archives - Obama Tweets]
-(https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media)
+You can access the data for yourself here: [National Archives - Obama Tweets](https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media)
 
 ```{r}
 glimpse(tweets)
 ```
+
+DATA Cleaning
+```{r}
+tweets2 <- tweets |> 
+    mutate(
+        timestamp = ymd_hms(timestamp),
+        text_lower = str_to_lower(text),
+        text = str_replace_all(text, "&amp;", "&")
+    )
+```
+
+at least 3 str_*() functions (3 different str_*() functions)
+at least 1 fct_*() function
+at least 3 regular expressions
+at least 1 lookaround
+at least 2 illustrative, well-labeled plots or tables
+a description of what insights can be gained from your plots and tables
+
+
+
+## Text Analysis
+
+#### Tweet Length
+
+```{r}
+tweets2 |> 
+    filter(!is.na(text)) |> 
+    mutate(length = str_length(text_lower)) |> 
+    mutate(mean = mean(length)) |> 
+    mutate(length_ratio = length/mean) |> 
+    select(length_ratio, length, tweet_id, timestamp, text, source) |> 
+    arrange(desc(length)) 
+```
+
+
+The mean length of the Tweets is 128 characters. This table displays the length of each post in descending order. Further, it takes the relative length of each post to the mean
+
+#### Most common Hashtags
+look around 
+fct_reorder
+plot 
+
+#### Most Mentioned 
+str_extract
+
+#### Topics 
+str_extract
+    fct_lump
+
+
+#### tweets per month/ per year
+plot 
+
+mutate(year = year(timestamp))
