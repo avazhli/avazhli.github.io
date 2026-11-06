@@ -2,7 +2,7 @@
 title: "Barack Obama's Tweets"
 description: A text analysis of former president Barack Obama's Twitter account
 author: Ava Li
-date: October 14,2026
+date: October 14, 2026
 format: html
 code-fold: true
 ---

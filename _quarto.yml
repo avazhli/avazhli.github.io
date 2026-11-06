@@ -16,6 +16,8 @@ website:
             href: gas.qmd
           - text: "Obama Tweets"
             href: obama.qmd
+          - text: "Texas 2026 Midterms"
+            href: tx2026.qmd
 
 
 format:

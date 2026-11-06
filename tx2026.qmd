@@ -1,0 +1,29 @@
+---
+title: "Texas in the 2026 Midterms"
+description: A simulation of votes by Texans in the 2026 Midterm Election
+author: Ava Li
+date: November 5, 2026
+format: html
+code-fold: true
+---
+```{r,message=FALSE,warning=FALSE}
+#| echo: false
+library(tidyverse)
+library(tidycensus)
+
+hisp <- read_acs(
+    geography = "county",
+    state = "TX",
+    variables = c(total = "B03002_001", hispanic = "B03002_012"),
+    year = 2024,
+    survey = "acs5",
+    output = "wide" 
+) |> 
+    mutate(hisp_share = hispanicE / totaleE,
+            majority_hisp = hisp_share > 0.5)
+
+write_csv(hisp, "data/tx_hispanic_share.csv")
+```
+
+
+
