@@ -25,5 +25,11 @@ hisp <- get_acs(
 write_csv(hisp, "data/tx_hispanic_share.csv")
 ```
 
+## The Data
+The following three data sets used for this project were obtained from various sites:
 
+* 2026 Senate Results by County (unofficial, Nov 4 2026, 4:48 pm CST) - [Texas Secretary of State's Election Results](https://goelect.txelections.civixapps.com/ivis-enr-ui/contestdetails?officeID=5075&officeName=U.%20S.%20SENATOR%20&officeType=FEDERAL%20OFFICES&from=race)
 
+* 2024 Presidential Results by County (Nov 26, 2024) - [Texas Secretary of State's Election Results](https://results.texas-election.com/contestdetails?officeID=1001&officeName=PRESIDENT%2FVICE-PRESIDENT&officeType=FEDERAL%20OFFICES&from=frace)
+
+* Hispanic Population Share by County - U.S. Census Bureau, American Community Survey 5-Year Estimates, Table B03002, accessed via the tidycensus R package
