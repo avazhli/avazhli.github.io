@@ -5,12 +5,27 @@ author: Ava Li
 date: November 5, 2026
 format: html
 code-fold: true
+execute:
+    warning: false
+    message: false
 ---
-```{r,message=FALSE,warning=FALSE}
-#| echo: false
+
+## The Data
+The following three data sets used for this project were obtained from various sites:
+
+* 2026 Senate Results by County (unofficial, Nov 4 2026, 4:48 pm CST) - [Texas Secretary of State's Election Results](https://goelect.txelections.civixapps.com/ivis-enr-ui/contestdetails?officeID=5075&officeName=U.%20S.%20SENATOR%20&officeType=FEDERAL%20OFFICES&from=race)
+
+* 2024 Presidential Results by County (Nov 26, 2024) - [Texas Secretary of State's Election Results](https://results.texas-election.com/contestdetails?officeID=1001&officeName=PRESIDENT%2FVICE-PRESIDENT&officeType=FEDERAL%20OFFICES&from=frace)
+
+* Hispanic Population Share by County - U.S. Census Bureau, American Community Survey 5-Year Estimates, Table B03002, accessed via the tidycensus R package
+```{r}
 library(tidyverse)
+```
+```{r}
+#| eval: false
 library(tidycensus)
 
+## Hispanic Population Share by County (TX)
 hisp <- get_acs(
     geography = "county",
     state = "TX",
@@ -25,11 +40,61 @@ hisp <- get_acs(
 write_csv(hisp, "data/tx_hispanic_share.csv")
 ```
 
-## The Data
-The following three data sets used for this project were obtained from various sites:
+```{r}
+## 2024 Presidential Results by County
+pres24_raw <- read_csv("data/TX 24 pres by county.csv")
 
-* 2026 Senate Results by County (unofficial, Nov 4 2026, 4:48 pm CST) - [Texas Secretary of State's Election Results](https://goelect.txelections.civixapps.com/ivis-enr-ui/contestdetails?officeID=5075&officeName=U.%20S.%20SENATOR%20&officeType=FEDERAL%20OFFICES&from=race)
+pres24 <- pres24_raw |> 
+    rename(candidate = "CANDIDATE NAME",
+           county = "COUNTY NAME",
+           votes = "TOTAL VOTES PER OFFICE PER COUNTY" ) |> 
+    ##mutate(votes = as.numeric(str_remove_all(as.character(votes), ","))) |> 
+    group_by(county) |> 
+    summarize(dem_24 = sum(votes[str_detect(candidate, "HARRIS")]),
+              rep_24 = sum(votes[str_detect(candidate, "TRUMP")]),
+              total_24 = sum(votes),
+              .groups = "drop") |> 
+    mutate (margin_24 = (dem_24 - rep_24) / total_24)
+```
 
-* 2024 Presidential Results by County (Nov 26, 2024) - [Texas Secretary of State's Election Results](https://results.texas-election.com/contestdetails?officeID=1001&officeName=PRESIDENT%2FVICE-PRESIDENT&officeType=FEDERAL%20OFFICES&from=frace)
+```{r}
+## 2026 Senate Results by County
+sen26_raw <- read_csv("data/TX 26 senate by county.csv")
 
-* Hispanic Population Share by County - U.S. Census Bureau, American Community Survey 5-Year Estimates, Table B03002, accessed via the tidycensus R package
+sen26 <- sen26_raw |> 
+    rename(county = "COUNTY NAME",
+            dem_26 = "JAMES TALARICO",
+            rep_26 = "KEN PAXTON",
+            total_26 = "TOTAL VOTES PER OFFICE PER COUNTY") |> 
+    select(county, dem_26, rep_26, total_26) |> 
+    mutate(margin_26 = (dem_26 - rep_26) / total_26)
+```
+
+```{r}
+hisp <- read_csv("data/tx_hispanic_share.csv") |> 
+    mutate(county = str_to_upper(str_remove(NAME, " County, Texas")),
+           county = str_replace(county, "^LA SALLE$", "LASALLE")) |> 
+    select(county, GEOID, totalE, hispanicE, hisp_share, majority_hisp)
+
+full_data <- pres24 |> 
+    inner_join(sen26, by = "county") |> 
+    inner_join(hisp, by = "county") |> 
+    mutate(swing = margin_26 - margin_24)
+
+nrow(full_data)
+count(full_data, majority_hisp)
+```
+
+## Simulation
+In the November 3rd general election, Democrats flipped several Republican-held Senate seats across the country, including in Texas, where James Talarico won the Senate race. This outcome seemed to have been partially due to the state's heavily Hispanic border region, where many counties shifted toward Democrats compared to the 2024 presidential election, when the state largely voted for Trump. Overall, Hispanic residents make up a large share of the Texas population, with 64 of the state's 254 counties being majority Hispanic. 
+
+In this simulation study, I will examine whether majority-Hispanic counties swung toward Democrats more than other Texas counties between the 2024 presidential race and the 2026 Senate race. I measure each county's swing as the change in the Democratic margin between the two races, then use a permutation test, shuffling which counties are labeled "majority Hispanic," to see whether the observed difference in median swing is larger than we would expect if county type had nothing to do with it. The answer helps show whether the Democratic gains in Texas were concentrated in majority-Hispanic counties or were spread more evenly across the state.
+
+## Plot
+
+a description of what insights can be gained from your plot(s) / results//describing each of your plots or tables.  
+That is, tell the reader what they see when they look at the plot. 
+
+
+## Conclusion
+end with a description of what you did (3-4 sentences).guide the reader through your analysis.
