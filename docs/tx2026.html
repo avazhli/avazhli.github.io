@@ -178,9 +178,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#the-data" id="toc-the-data" class="nav-link active" data-scroll-target="#the-data">The Data</a></li>
   <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#title" id="toc-title" class="nav-link" data-scroll-target="#title">TITLE</a></li>
+  <li><a href="#exploring-the-data" id="toc-exploring-the-data" class="nav-link" data-scroll-target="#exploring-the-data">Exploring the Data</a></li>
   <li><a href="#hypothesis-and-simulation" id="toc-hypothesis-and-simulation" class="nav-link" data-scroll-target="#hypothesis-and-simulation">Hypothesis and Simulation</a></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
   </ul>
 </nav>
     </div>
@@ -305,12 +306,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>In the November 3rd general election, Democrats flipped several Republican-held Senate seats across the country, including in Texas, where James Talarico won the Senate race. This outcome seemed to have been partially due to the state’s heavily Hispanic southern border region, where many counties shifted toward Democrats compared to the 2024 presidential election, when the state largely voted for Trump. Overall, Hispanic residents make up a large share of the Texas population, with 64 of the state’s 254 counties being majority Hispanic.</p>
-<p>In this simulation study, I will examine whether majority-Hispanic counties swung toward Democrats more than other Texas counties between the 2024 presidential race and the 2026 Senate race. I measure each county’s swing as the change in the Democratic margin between the two races, then use a permutation test, shuffling which counties are labeled “majority Hispanic,” to see whether the observed difference in median swing is larger than we would expect if county type had nothing to do with it. The answer helps show whether the Democratic gains in Texas were concentrated in majority-Hispanic counties or were spread more evenly across the state.</p>
+<p>In the November 3rd general election, Democrats flipped several Republican-held Senate seats across the country, including in Texas, where James Talarico won the Senate race. This outcome seemed to have been partially due to the state’s heavily Hispanic southern border region, where many counties shifted their votes toward Democrats compared to the 2024 presidential election, when the state largely voted for Trump. Overall, Hispanic residents make up a large share of the Texas population, with 64 of the state’s 254 counties being majority Hispanic.</p>
+<p>In this simulation study, I examine whether majority-Hispanic counties swung toward Democrats more than other Texas counties between the 2024 presidential race and the 2026 Senate race. I measure each county’s swing as the change in the Democratic margin between the two races, then use a permutation test, shuffling which counties are labeled “majority Hispanic,” to see whether the observed difference in median swing is larger than we would expect if county type had nothing to do with it. The answer helps show whether the Democratic gains in Texas were concentrated in majority-Hispanic counties or spread more evenly across the state.</p>
 </section>
-<section id="title" class="level2">
-<h2 class="anchored" data-anchor-id="title">TITLE</h2>
-<p>Exploring the data, we can calculate the swing toward Democrats from the 2024 Presidential election to the 2026 Senate election. A positive swing means more Democratic votes.</p>
+<section id="exploring-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-the-data">Exploring the Data</h2>
+<p>We can first calculate the swing toward Democrats from the 2024 Presidential election to the 2026 Senate election. A positive swing means more Democratic votes.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -327,7 +328,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 2 FALSE                0.162     0.166   190</code></pre>
 </div>
 </div>
-<p>While both majority hispanic and non-majority hispanic counties swung towards the Democrats in the 2026 Senate election, the 64 majority hispanic counties swung more extremely, at almost double the rate than non-majority counties in both a median and average swing.</p>
+<p>While both majority-hispanic and other counties swung towards the Democrats in the 2026 Senate race, the 64 majority hispanic counties swung more extremely, at almost double the rate than non-majority counties in both a median and average swing.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -352,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 10 CULBERSON   -0.169     0.221  0.390 TRUE         </code></pre>
 </div>
 </div>
-<p>Arranging the data by counties with the greatest swings, we can see that among the top 10 counties, all are majority hispanic and all are either on or near the southern border.</p>
+<p>Arranging the data by counties with the greatest swings, we can see that among the top 10 counties, all are majority hispanic and all are either on or near the southern border. Starr County’s swing, about 72 percentage points, is the largest.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -378,12 +379,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>When plotted, the original data shows that the spread of changes in democratic margins is much greater in majority hispanic than non-majority hispanic counties. The differences between the two types of counties becomes more clear, with the median of the majoirty hispanic counties being higher as calculated earlier, and with a</p>
+<p>The boxplot shows that the each group’s centers differ substantially: the median swing is almost 30 percentage points for majority-Hispanic counties and only around 15 percentage points for non-majority-Hispanic counties. The spread differs as well, with majority-Hispanic counties having almost twice as great of a spread as non-Hispanic-majority counties. The plot also makes it clear that each of the 254 counties swung towards Democrats from the 2024 to 2026 election, so the difference lies in <em>how much</em> the counties changed, not the direction.</p>
 </section>
 <section id="hypothesis-and-simulation" class="level2">
 <h2 class="anchored" data-anchor-id="hypothesis-and-simulation">Hypothesis and Simulation</h2>
-<p>Outcome: Democratic margin in 2026 Senate minus Democratic margin in 2024 presidential, by county Grouping variable: majority-Hispanic counties (&gt;50% hisp per Census ACS) vs.&nbsp;not Test statistic: difference in median swing between groups</p>
-<p>The null hypothesis in my simulation is that the group label of Hispanic or Not hispanic for each county is unrelated to the swing of votes in the 2026 Midterm Election.</p>
+<p><strong>Null Hypothesis</strong> A county’s label of majority Hispanic or not is unrelated to its swing between the 2024 presidential race and the 2026 Senate race, and any diffrence in median swing is due to random chance.</p>
+<p><strong>Alternative Hypothesis</strong> The median swing from 2024 to 2026 differs between majority-Hispanic and non-majority-Hispanic counties.</p>
+<p><strong>Test Statistic</strong> The median swing of majority-Hispanic counties minus the median swing of other counties.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -398,6 +400,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.131809</code></pre>
 </div>
+</div>
+<p>The observed difference (obs_diff) is the difference in median swing between majority-Hispanic counties and all other counties in the <em>real data</em>, about 0.13, or 13 percentage points. This percentage serves as the benchmark for comparison against the differences produced when shuffling the county labels to see whether a gap this large could plausibly happen by chance.</p>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>random_diff <span class="ot">&lt;-</span> <span class="cf">function</span>(rep, data) {</span>
@@ -412,49 +417,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
+</div>
+<p>My function <code>random_diff()</code> simulates a world where the null is true. The function maintains each county’s real swing and the original number of majority Hispanic and other counties, then randomly reassigns the “majority Hispanic” label across the 254 counties. It then recomputes the test statistic. Using <code>map_dbl()</code>, this process is repeated 5,000 times, giving a distribution of differences we would see by chance alone.</p>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>null_dist <span class="sc">|&gt;</span> </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> null_dist)) <span class="sc">+</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.002</span>) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.004</span>, <span class="at">fill =</span> <span class="st">"antiquewhite4"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> obs_diff, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Difference in Median Swing (majority Hispanic - non-majority)"</span>, </span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Difference in Median Swing (maj. Hisp. - non-maj. Hisp.)"</span>, </span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Number of Simulated Shuffles"</span>,</span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Sampling distribution when null hypothesis is true"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tx2026_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="tx2026_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">tibble</span>(<span class="at">diff =</span> null_dist), <span class="fu">aes</span>(<span class="at">x =</span> diff)) <span class="sc">+</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">"grey70"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> obs_diff, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Differences in median swing when county labels are shuffled"</span>,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Difference in median swing (majority Hispanic minus other)"</span>,</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of shuffles"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="tx2026_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>a description of what insights can be gained from your plot(s) / results//describing each of your plots or tables.<br>
-That is, tell the reader what they see when they look at the plot.</p>
+<p>This histogram shows the distribution of the 5,000 shuffled differences in median swing under the null hypothesis. The distribution is centered around 0.00 and nearly all values fall between roughly -0.05 and 0.05. The red line demarcates the real observed difference under the alternative hypothesis at about 0.13, which lies far beyond every shuffled difference. The p-value is the proportion of simulated differences whos absolute value is at least as large as the observed difference, therefore telling us how often chance alone would produce the observed value. The p-value computed here is close to 0, therefore p-value &lt; 0.05.</p>
 </section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>end with a description of what you did (3-4 sentences).guide the reader through your analysis.</p>
+<p>The observed difference in median swing, about 13 percentage points, is much larger than any difference produced by shuffling the county labels. The p-value at near-zero is far below 0.05, meaning we can reject the null hypothesis and conclude that there is strong evidence that majority-Hispanic Texas counties swung toward Democrats by more than other counties between the 2024 presidential race and the 2026 Senate race.</p>
+<p>While this test produces significant results, there are a few limits to this simulation. There could be other differences between majority-Hispanic and other counties apart from ethnicity that played a role in their votes and the data is county-level rather than individual-level, so we don’t know how each Hispanic voter voted. In addition, votes in the <em>presidential</em> race in 2024 is being compared to votes in the 2026 <em>senate</em> race, so there may be some variation based on differences in candidates. Also, the 50% cutoff to decide “majority Hispanic” is somewhat of an arbitrary choice and could impact the results.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>I compared the 2024-to-2026 Democratic swing in majority-Hispanic and other Texas counties using county-level election and Census data. In the original data, majority-Hispanic counties had a median swing about 13 percentage points larger. In the simulation, a function shuffled the county labels 5,000 times, finding that no shuffle produced a difference as large as the observed difference from the original data.</p>
 
 
 </section>

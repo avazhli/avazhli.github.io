@@ -82,12 +82,12 @@ full_data <- pres24 |>
 ```
 
 ## Introduction
-In the November 3rd general election, Democrats flipped several Republican-held Senate seats across the country, including in Texas, where James Talarico won the Senate race. This outcome seemed to have been partially due to the state's heavily Hispanic southern border region, where many counties shifted toward Democrats compared to the 2024 presidential election, when the state largely voted for Trump. Overall, Hispanic residents make up a large share of the Texas population, with 64 of the state's 254 counties being majority Hispanic. 
+In the November 3rd general election, Democrats flipped several Republican-held Senate seats across the country, including in Texas, where James Talarico won the Senate race. This outcome seemed to have been partially due to the state's heavily Hispanic southern border region, where many counties shifted their votes toward Democrats compared to the 2024 presidential election, when the state largely voted for Trump. Overall, Hispanic residents make up a large share of the Texas population, with 64 of the state's 254 counties being majority Hispanic. 
 
-In this simulation study, I will examine whether majority-Hispanic counties swung toward Democrats more than other Texas counties between the 2024 presidential race and the 2026 Senate race. I measure each county's swing as the change in the Democratic margin between the two races, then use a permutation test, shuffling which counties are labeled "majority Hispanic," to see whether the observed difference in median swing is larger than we would expect if county type had nothing to do with it. The answer helps show whether the Democratic gains in Texas were concentrated in majority-Hispanic counties or were spread more evenly across the state.
+In this simulation study, I examine whether majority-Hispanic counties swung toward Democrats more than other Texas counties between the 2024 presidential race and the 2026 Senate race. I measure each county's swing as the change in the Democratic margin between the two races, then use a permutation test, shuffling which counties are labeled "majority Hispanic," to see whether the observed difference in median swing is larger than we would expect if county type had nothing to do with it. The answer helps show whether the Democratic gains in Texas were concentrated in majority-Hispanic counties or spread more evenly across the state.
 
-## TITLE
-Exploring the data, we can calculate the swing toward Democrats from the 2024 Presidential election to the 2026 Senate election. A positive swing means more Democratic votes.
+## Exploring the Data
+We can first calculate the swing toward Democrats from the 2024 Presidential election to the 2026 Senate election. A positive swing means more Democratic votes.
 ```{r}
 full_data |> 
     group_by(majority_hisp) |> 
@@ -95,7 +95,7 @@ full_data |>
     arrange(desc(majority_hisp))
 ```
 
-While both majority hispanic and non-majority hispanic counties swung towards the Democrats in the 2026 Senate election, the 64 majority hispanic counties swung more extremely, at almost double the rate than non-majority counties in both a median and average swing. 
+While both majority-hispanic and other counties swung towards the Democrats in the 2026 Senate race, the 64 majority hispanic counties swung more extremely, at almost double the rate than non-majority counties in both a median and average swing. 
 
 ```{r}
 full_data |> 
@@ -104,7 +104,7 @@ full_data |>
     head(10)
 ```
 
-Arranging the data by counties with the greatest swings, we can see that among the top 10 counties, all are majority hispanic and all are either on or near the southern border.
+Arranging the data by counties with the greatest swings, we can see that among the top 10 counties, all are majority hispanic and all are either on or near the southern border. Starr County's swing, about 72 percentage points, is the largest.
 
 ```{r}
 full_data |> 
@@ -122,15 +122,16 @@ full_data |>
         guides(fill = "none") 
 ```
 
-When plotted, the original data shows that the spread of changes in democratic margins is much greater in majority hispanic than non-majority hispanic counties. The differences between the two types of counties becomes more clear, with the median of the majoirty hispanic counties being higher as calculated earlier, and with a
-
+The boxplot shows that the each group's centers differ substantially: the median swing is almost 30 percentage points for majority-Hispanic counties and only around 15 percentage points for non-majority-Hispanic counties. The spread differs as well, with majority-Hispanic counties having almost twice as great of a spread as non-Hispanic-majority counties. The plot also makes it clear that each of the 254 counties swung towards Democrats from the 2024 to 2026 election, so the difference lies in *how much* the counties changed, not the direction.
 
 ## Hypothesis and Simulation
-Outcome: Democratic margin in 2026 Senate minus Democratic margin in 2024 presidential, by county
-Grouping variable: majority-Hispanic counties (>50% hisp per Census ACS) vs. not
-Test statistic: difference in median swing between groups
+**Null Hypothesis** A county's label of majority Hispanic or not is unrelated to its swing between the 2024 presidential race and the 2026 Senate race, and any diffrence in median swing is due to random chance.
 
-The null hypothesis in my simulation is that the group label of Hispanic or Not hispanic for each county is unrelated to the swing of votes in the 2026 Midterm Election. 
+**Alternative Hypothesis** The median swing from 2024 to 2026 differs between majority-Hispanic and non-majority-Hispanic counties.
+
+**Test Statistic** The median swing of majority-Hispanic counties minus the median swing of other counties.
+
+
 ```{r}
 set.seed(47)
 
@@ -139,7 +140,11 @@ obs_diff <- full_data |>
               median(swing[!majority_hisp])) |> 
     pull()
 obs_diff
+```
 
+The observed difference (obs_diff) is the difference in median swing between majority-Hispanic counties and all other counties in the *real data*, about 0.13, or 13 percentage points. This percentage serves as the benchmark for comparison against the differences produced when shuffling the county labels to see whether a gap this large could plausibly happen by chance.
+
+```{r}
 random_diff <- function(rep, data) {
     shuffled <- sample(data$majority_hisp)
     median(data$swing[shuffled]) - median(data$swing[!shuffled])
@@ -148,21 +153,27 @@ random_diff <- function(rep, data) {
 null_dist <- map_dbl(1:5000, random_diff, data = full_data)
 p_val <- sum(abs(null_dist) >= abs(obs_diff)) / 5000
 p_val
+```
 
+My function `random_diff()` simulates a world where the null is true. The function maintains each county's real swing and the original number of majority Hispanic and other counties, then randomly reassigns the "majority Hispanic" label across the 254 counties. It then recomputes the test statistic. Using `map_dbl()`, this process is repeated 5,000 times, giving a distribution of differences we would see by chance alone.
+
+```{r}
 null_dist |> 
     data.frame() |> 
     ggplot(aes(x = null_dist)) +
-    geom_histogram(binwidth = 0.002) +
+    geom_histogram(binwidth = 0.004, fill = "antiquewhite4", color = "white") +
     geom_vline(xintercept = obs_diff, color = "red") +
-    labs(x = "Difference in Median Swing (majority Hispanic - non-majority)", 
+    labs(x = "Difference in Median Swing (maj. Hisp. - non-maj. Hisp.)", 
         y = "Number of Simulated Shuffles",
         title = "Sampling distribution when null hypothesis is true")
 ```
 
-
-a description of what insights can be gained from your plot(s) / results//describing each of your plots or tables.  
-That is, tell the reader what they see when they look at the plot. 
-
+This histogram shows the distribution of the 5,000 shuffled differences in median swing under the null hypothesis. The distribution is centered around 0.00 and nearly all values fall between roughly -0.05 and 0.05. The red line demarcates the real observed difference under the alternative hypothesis at about 0.13, which lies far beyond every shuffled difference. The p-value is the proportion of simulated differences whos absolute value is at least as large as the observed difference, therefore telling us how often chance alone would produce the observed value. The p-value computed here is close to 0, therefore p-value < 0.05.
 
 ## Conclusion
-end with a description of what you did (3-4 sentences).guide the reader through your analysis.
+The observed difference in median swing, about 13 percentage points, is much larger than any difference produced by shuffling the county labels. The p-value at near-zero is far below 0.05, meaning we can reject the null hypothesis and conclude that there is strong evidence that majority-Hispanic Texas counties swung toward Democrats by more than other counties between the 2024 presidential race and the 2026 Senate race.
+
+While this test produces significant results, there are a few limits to this simulation. There could be other differences between majority-Hispanic and other counties apart from ethnicity that played a role in their votes and the data is county-level rather than individual-level, so we don't know how each Hispanic voter voted. In addition, votes in the *presidential* race in 2024 is being compared to votes in the 2026 *senate* race, so there may be some variation based on differences in candidates. Also, the 50% cutoff to decide "majority Hispanic" is somewhat of an arbitrary choice and could impact the results. 
+
+## Summary
+I compared the 2024-to-2026 Democratic swing in majority-Hispanic and other Texas counties using county-level election and Census data. In the original data, majority-Hispanic counties had a median swing about 13 percentage points larger. In the simulation, a function shuffled the county labels 5,000 times, finding that no shuffle produced a difference as large as the observed difference from the original data.
