@@ -11,7 +11,7 @@ execute:
 ---
 
 ## The Data
-The following three data sets used for this project were obtained from various sites:
+The following three data sets used for this project were obtained from The Texas Secretary of State and the U.S. Census Bureau:
 
 * 2026 Senate Results by County (unofficial, Nov 4 2026, 4:48 pm CST) - [Texas Secretary of State's Election Results](https://goelect.txelections.civixapps.com/ivis-enr-ui/contestdetails?officeID=5075&officeName=U.%20S.%20SENATOR%20&officeType=FEDERAL%20OFFICES&from=race)
 
@@ -55,9 +55,7 @@ pres24 <- pres24_raw |>
               total_24 = sum(votes),
               .groups = "drop") |> 
     mutate (margin_24 = (dem_24 - rep_24) / total_24)
-```
 
-```{r}
 ## 2026 Senate Results by County
 sen26_raw <- read_csv("data/TX 26 senate by county.csv")
 
@@ -71,6 +69,7 @@ sen26 <- sen26_raw |>
 ```
 
 ```{r}
+## Joining of Data Frames
 hisp <- read_csv("data/tx_hispanic_share.csv") |> 
     mutate(county = str_to_upper(str_remove(NAME, " County, Texas")),
            county = str_replace(county, "^LA SALLE$", "LASALLE")) |> 
@@ -80,17 +79,86 @@ full_data <- pres24 |>
     inner_join(sen26, by = "county") |> 
     inner_join(hisp, by = "county") |> 
     mutate(swing = margin_26 - margin_24)
-
-nrow(full_data)
-count(full_data, majority_hisp)
 ```
 
-## Simulation
-In the November 3rd general election, Democrats flipped several Republican-held Senate seats across the country, including in Texas, where James Talarico won the Senate race. This outcome seemed to have been partially due to the state's heavily Hispanic border region, where many counties shifted toward Democrats compared to the 2024 presidential election, when the state largely voted for Trump. Overall, Hispanic residents make up a large share of the Texas population, with 64 of the state's 254 counties being majority Hispanic. 
+## Introduction
+In the November 3rd general election, Democrats flipped several Republican-held Senate seats across the country, including in Texas, where James Talarico won the Senate race. This outcome seemed to have been partially due to the state's heavily Hispanic southern border region, where many counties shifted toward Democrats compared to the 2024 presidential election, when the state largely voted for Trump. Overall, Hispanic residents make up a large share of the Texas population, with 64 of the state's 254 counties being majority Hispanic. 
 
 In this simulation study, I will examine whether majority-Hispanic counties swung toward Democrats more than other Texas counties between the 2024 presidential race and the 2026 Senate race. I measure each county's swing as the change in the Democratic margin between the two races, then use a permutation test, shuffling which counties are labeled "majority Hispanic," to see whether the observed difference in median swing is larger than we would expect if county type had nothing to do with it. The answer helps show whether the Democratic gains in Texas were concentrated in majority-Hispanic counties or were spread more evenly across the state.
 
-## Plot
+## TITLE
+Exploring the data, we can calculate the swing toward Democrats from the 2024 Presidential election to the 2026 Senate election. A positive swing means more Democratic votes.
+```{r}
+full_data |> 
+    group_by(majority_hisp) |> 
+    summarize(median_swing = median(swing), avg_swing = mean(swing), n = n()) |> 
+    arrange(desc(majority_hisp))
+```
+
+While both majority hispanic and non-majority hispanic counties swung towards the Democrats in the 2026 Senate election, the 64 majority hispanic counties swung more extremely, at almost double the rate than non-majority counties in both a median and average swing. 
+
+```{r}
+full_data |> 
+    select(county, margin_24, margin_26, swing, majority_hisp) |> 
+    arrange(desc(swing)) |> 
+    head(10)
+```
+
+Arranging the data by counties with the greatest swings, we can see that among the top 10 counties, all are majority hispanic and all are either on or near the southern border.
+
+```{r}
+full_data |> 
+    mutate(county_type = if_else(majority_hisp, 
+            "Majority Hispanic", "Not Majority Hispanic")) |> 
+    ggplot(aes(x = county_type, y = swing, fill = county_type)) + 
+        geom_boxplot(alpha = 0.4, outlier.shape = NA) +
+        scale_fill_manual(values = c("Majority Hispanic" = "cadetblue1", 
+                                    "Not Majority Hispanic" = "wheat1")) +
+        geom_jitter(width = 0.15, alpha = 0.5) +
+        scale_y_continuous(labels = scales::label_percent()) +
+        labs(title = "Democratic Swing in Texas Counties", 
+            subtitle = "between 2024 presidential and 2026 senate races",
+            x = "County Type", y = "% Change in Democratic Margin") +
+        guides(fill = "none") 
+```
+
+When plotted, the original data shows that the spread of changes in democratic margins is much greater in majority hispanic than non-majority hispanic counties. The differences between the two types of counties becomes more clear, with the median of the majoirty hispanic counties being higher as calculated earlier, and with a
+
+
+## Hypothesis and Simulation
+Outcome: Democratic margin in 2026 Senate minus Democratic margin in 2024 presidential, by county
+Grouping variable: majority-Hispanic counties (>50% hisp per Census ACS) vs. not
+Test statistic: difference in median swing between groups
+
+The null hypothesis in my simulation is that the group label of Hispanic or Not hispanic for each county is unrelated to the swing of votes in the 2026 Midterm Election. 
+```{r}
+set.seed(47)
+
+obs_diff <- full_data |> 
+    summarize(diff = median(swing[majority_hisp]) -
+              median(swing[!majority_hisp])) |> 
+    pull()
+obs_diff
+
+random_diff <- function(rep, data) {
+    shuffled <- sample(data$majority_hisp)
+    median(data$swing[shuffled]) - median(data$swing[!shuffled])
+}
+
+null_dist <- map_dbl(1:5000, random_diff, data = full_data)
+p_val <- sum(abs(null_dist) >= abs(obs_diff)) / 5000
+p_val
+
+null_dist |> 
+    data.frame() |> 
+    ggplot(aes(x = null_dist)) +
+    geom_histogram(binwidth = 0.002) +
+    geom_vline(xintercept = obs_diff, color = "red") +
+    labs(x = "Difference in Median Swing (majority Hispanic - non-majority)", 
+        y = "Number of Simulated Shuffles",
+        title = "Sampling distribution when null hypothesis is true")
+```
+
 
 a description of what insights can be gained from your plot(s) / results//describing each of your plots or tables.  
 That is, tell the reader what they see when they look at the plot. 
