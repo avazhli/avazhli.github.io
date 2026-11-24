@@ -18,6 +18,8 @@ website:
             href: obama.qmd
           - text: "Texas 2026 Midterms"
             href: tx2026.qmd
+          - text: "Ethics: Data and Power"
+            href: ethics.qmd
 
 
 format:

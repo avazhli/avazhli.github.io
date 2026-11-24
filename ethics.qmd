@@ -1,0 +1,18 @@
+---
+title: "Ethics: Data and Power"
+description: Ethical dilemmas in data science
+author: Ava Li
+date: November 24, 2026
+format: html
+code-fold: true
+execute:
+    warning: false
+    message: false
+---
+
+## QUESTION
+WORDS WORDS 
+
+### References
+words [link](link)
+words [link](link)
